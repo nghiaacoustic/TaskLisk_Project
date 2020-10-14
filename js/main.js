@@ -1,6 +1,9 @@
 var valid = new Validation();
 var taskList = new TaskList();
-getLocalStorage();
+var taskListService = new TaskListService();
+getTaskList();
+
+//getLocalStorage();
 
 function getEle(id) {
     return document.getElementById(id);
@@ -24,14 +27,14 @@ function taoBang(arr) {
 getEle("addItem").addEventListener("click", function() {
     var input = getEle("newTask").value;
     var isValid = true;
-    isValid &= valid.isEmpty(input, "notiInput", "(*) Vui lòng nhập nội dung") && valid.checkDup(input, "notiInput", "Task này đã có trong List", taskList.arr);
+    isValid &= valid.isEmpty(input, "notiInput", "(*) Vui lòng nhập nội dung");
+    // valid.checkDup(input, "notiInput", "Task này đã có trong List", taskArr);
     if (!isValid) return;
 
-    var id = Math.random();
-    var task = new Task(id, input, "todo");
-    taskList.addTask(task);
-    taoBang(taskList.arr);
-    setLocalStorage();
+    // var id = Math.random();
+    // var task = new Task(id, input, "todo");
+    addTask();
+    // setLocalStorage();   
 });
 
 function createHTML(item) {
@@ -55,27 +58,71 @@ function createHTML(item) {
     </li>`;
 }
 
-function changeStatus(id) {
-    var task = taskList.FindTask(id);
-    task.status = "todo" ? "completed" : "todo";
-    taskList.updateTask(task);
-    taoBang(taskList.arr);
-    setLocalStorage();
+// function changeStatus(id) {
+//     var task = taskList.FindTask(id);
+//     task.status = "todo" ? "completed" : "todo";
+//     taskList.updateTask(task);
+//     taoBang(taskList.arr);
+//      setLocalStorage();
+// }
+
+
+// function deleteTask(id) {
+//     taskList.deleteTask(id);
+//     taoBang(taskList.arr);
+//      setLocalStorage();
+// }
+
+// function setLocalStorage() {
+//     localStorage.setItem("TaskList", JSON.stringify(taskList.arr));
+// }
+
+// function getLocalStorage() {
+//     if (localStorage.getItem("TaskList")) {
+//         taskList.arr = JSON.parse(localStorage.getItem("TaskList"));
+//         taoBang(taskList.arr);
+//     }
+// }
+function getTaskList() {
+    taskListService.getTaskListService()
+        .then(function(rs) {
+            taoBang(rs.data);
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+}
+
+function addTask() {
+    taskListService.addTaskService()
+        .then(function(rs) {
+            alert("Thêm thành công!");
+            getTaskList();
+
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 }
 
 function deleteTask(id) {
-    taskList.deleteTask(id);
-    taoBang(taskList.arr);
-    setLocalStorage();
+    taskListService.deleteTaskService(id)
+        .then(function(rs) {
+            alert("Xóa thành công!");
+            getTaskList();
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 }
 
-function setLocalStorage() {
-    localStorage.setItem("TaskList", JSON.stringify(taskList.arr));
-}
-
-function getLocalStorage() {
-    if (localStorage.getItem("TaskList")) {
-        taskList.arr = JSON.parse(localStorage.getItem("TaskList"));
-        taoBang(taskList.arr);
-    }
+function changeStatus(id) {
+    taskListService.changeStatusService(id)
+        .then(function(rs) {
+            alert("Cập nhật thành công!");
+            getTaskList();
+        })
+        .catch(function(err) {
+            console.log(err);
+        })
 }
