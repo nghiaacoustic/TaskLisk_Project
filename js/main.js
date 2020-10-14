@@ -1,7 +1,9 @@
 var valid = new Validation();
 var taskList = new TaskList();
 var taskListService = new TaskListService();
+var newArr = [];
 getTaskList();
+
 
 //getLocalStorage();
 
@@ -27,8 +29,8 @@ function taoBang(arr) {
 getEle("addItem").addEventListener("click", function() {
     var input = getEle("newTask").value;
     var isValid = true;
-    isValid &= valid.isEmpty(input, "notiInput", "(*) Vui lòng nhập nội dung");
-    // valid.checkDup(input, "notiInput", "Task này đã có trong List", taskArr);
+
+    isValid &= valid.isEmpty(input, "notiInput", "(*) Vui lòng nhập nội dung") && valid.checkDup(input, "notiInput", "Task này đã có trong List", newArr);
     if (!isValid) return;
 
     // var id = Math.random();
@@ -86,6 +88,7 @@ function createHTML(item) {
 function getTaskList() {
     taskListService.getTaskListService()
         .then(function(rs) {
+            newArr = rs.data
             taoBang(rs.data);
         })
         .catch(function(err) {

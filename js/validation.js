@@ -11,6 +11,7 @@ function Validation() {
         }
     };
     this.checkDup = function(input, ID, mess, listArr) {
+        console.log(listArr);
         isStatus = false;
         isStatus = listArr.some(function(item) {
             return item.name === input;
