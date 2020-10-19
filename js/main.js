@@ -119,13 +119,32 @@ function deleteTask(id) {
         })
 }
 
+
 function changeStatus(id) {
-    taskListService.changeStatusService(id)
-        .then(function(rs) {
-            alert("Cập nhật thành công!");
-            getTaskList();
-        })
-        .catch(function(err) {
-            console.log(err);
-        })
+    var sts = "";
+    newArr.forEach(function(item) {
+        if (item.id == id) {
+            sts = item.status;
+        }
+    });
+    if (sts === "todo") {
+        taskListService.changeStatusService(id)
+            .then(function(rs) {
+                alert("Cập nhật thành công!");
+                getTaskList();
+            })
+            .catch(function(err) {
+                console.log(err);
+            })
+    } else if (sts === "completed") {
+        taskListService.changeStatusServiceBack(id)
+            .then(function(rs) {
+                alert("Cập nhật thành công!");
+                getTaskList();
+            })
+            .catch(function(err) {
+                console.log(err);
+            })
+
+    }
 }

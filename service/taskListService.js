@@ -33,4 +33,13 @@ function TaskListService() {
             },
         });
     }
+    this.changeStatusServiceBack = function(_id) {
+        return axios({
+            url: `https://5f826f430695720016433512.mockapi.io/api/taskList/${_id}`,
+            method: "PUT",
+            data: {
+                status: "todo",
+            },
+        });
+    }
 }
